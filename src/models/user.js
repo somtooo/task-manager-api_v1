@@ -43,11 +43,14 @@ const userSchema = new mongoose.Schema({
 
     },
     tokens: [{
-        token:{
-            type:String,
-            required:true
+        token: {
+            type: String,
+            required: true
         }
     }]
+},{
+
+    timestamps: true
 })
 
 userSchema.virtual('tasks',{
@@ -67,8 +70,7 @@ userSchema.methods.toJSON = function(){
 }
 userSchema.methods.generateAuthToken = async function (){
     const user = this
-    const token = jwt.sign({_id:user._id},'thisismynewcourse')
-    return token
+    return jwt.sign({_id: user._id}, 'thisismynewcourse')
 
 }
 
