@@ -68,13 +68,12 @@ userSchema.methods.toJSON = function(){
 
     delete userObject.password
     delete userObject.tokens
-    delete userObject.avatar
     return userObject
 
 }
 userSchema.methods.generateAuthToken = async function (){
     const user = this
-    return jwt.sign({_id: user._id}, 'thisismynewcourse')
+    return jwt.sign({_id: user._id}, process.env.JSON_WEB_TOKEN_SECRET)
 
 }
 
