@@ -6,13 +6,14 @@ const multer = require('multer')
 const sharp = require('sharp')
 const {sendWelcomeEmail,sendCancelationEmail} = require('../emails/account')
 
-
 router.post('/users', async (req,res)=>{
+
     const user = new User(req.body);
     try {
         const token = await user.generateAuthToken()
         user.tokens =  user.tokens.concat({token})
         await  user.save()
+
         sendWelcomeEmail(user.email, user.name)
         res.status(201).send({user,token})
     } catch (e) {
