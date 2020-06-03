@@ -87,3 +87,35 @@ test('Should not delete account for unauthorized user', async ()=>{
         .expect(401)
 })
 
+test('Should upload avatar image', async ()=>{
+    await request(app)
+        .post('/users/me/avatar')
+        .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+        .attach('avatar', 'tests/fixtures/profile-pic.jpg')
+        .expect(200)
+    const user = await User.findById(userOneId)
+    expect(user.avatar).toEqual(expect.any(Buffer))
+
+})
+
+test('Should update valid user fields', async ()=>{
+    await request(app)
+        .patch('/users/me')
+        .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+        .send({
+            name:'Jessi'
+        })
+        .expect(200)
+    const user = await User.findById(userOneId)
+    expect(user.name).toEqual('Jessi')
+})
+
+test('Should not update valid user fields', async ()=>{
+    await request(app)
+        .patch('/users/me')
+        .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+        .send({
+            location:'Phili'
+        })
+        .expect(400)
+})
